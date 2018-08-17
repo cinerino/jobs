@@ -33,9 +33,10 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
     }
     count += 1;
     try {
-        yield cinerino.service.task.executeByName(cinerino.factory.taskName.RefundPoint)({
+        yield cinerino.service.task.executeByName(cinerino.factory.taskName.RefundAccount)({
             taskRepo: taskRepo,
             connection: cinerino.mongoose.connection,
+            pecorinoEndpoint: process.env.PECORINO_ENDPOINT,
             pecorinoAuthClient: authClient
         });
     }

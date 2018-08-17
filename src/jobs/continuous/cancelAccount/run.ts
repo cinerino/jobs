@@ -1,5 +1,5 @@
 /**
- * ポイント返金実行
+ * ポイント決済取引中止
  */
 import * as cinerino from '@cinerino/domain';
 import * as createDebug from 'debug';
@@ -34,10 +34,11 @@ setInterval(
 
         try {
             await cinerino.service.task.executeByName(
-                cinerino.factory.taskName.RefundPoint
+                cinerino.factory.taskName.CancelAccount
             )({
                 taskRepo: taskRepo,
                 connection: cinerino.mongoose.connection,
+                pecorinoEndpoint: <string>process.env.PECORINO_ENDPOINT,
                 pecorinoAuthClient: authClient
             });
         } catch (error) {

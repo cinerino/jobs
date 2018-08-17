@@ -1,7 +1,6 @@
 /**
- * ポイント支払取引実行
+ * ポイント返金実行
  */
-
 import * as cinerino from '@cinerino/domain';
 import * as createDebug from 'debug';
 
@@ -14,7 +13,7 @@ cinerino.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOp
 let count = 0;
 
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
-const INTERVAL_MILLISECONDS = 1000;
+const INTERVAL_MILLISECONDS = 200;
 const taskRepo = new cinerino.repository.Task(cinerino.mongoose.connection);
 
 const authClient = new cinerino.pecorinoapi.auth.ClientCredentials({
@@ -35,10 +34,11 @@ setInterval(
 
         try {
             await cinerino.service.task.executeByName(
-                cinerino.factory.taskName.PayPoint
+                cinerino.factory.taskName.RefundAccount
             )({
                 taskRepo: taskRepo,
                 connection: cinerino.mongoose.connection,
+                pecorinoEndpoint: <string>process.env.PECORINO_ENDPOINT,
                 pecorinoAuthClient: authClient
             });
         } catch (error) {

@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * ポイント支払取引実行
+ */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -8,9 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * ポイント決済取引中止
- */
 const cinerino = require("@cinerino/domain");
 const createDebug = require("debug");
 const mongooseConnectionOptions_1 = require("../../../mongooseConnectionOptions");
@@ -18,7 +18,7 @@ const debug = createDebug('cinerino-jobs:*');
 cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default).then(debug).catch(console.error);
 let count = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
-const INTERVAL_MILLISECONDS = 200;
+const INTERVAL_MILLISECONDS = 1000;
 const taskRepo = new cinerino.repository.Task(cinerino.mongoose.connection);
 const authClient = new cinerino.pecorinoapi.auth.ClientCredentials({
     domain: process.env.PECORINO_AUTHORIZE_SERVER_DOMAIN,
@@ -33,9 +33,10 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
     }
     count += 1;
     try {
-        yield cinerino.service.task.executeByName(cinerino.factory.taskName.CancelPoint)({
+        yield cinerino.service.task.executeByName(cinerino.factory.taskName.PayAccount)({
             taskRepo: taskRepo,
             connection: cinerino.mongoose.connection,
+            pecorinoEndpoint: process.env.PECORINO_ENDPOINT,
             pecorinoAuthClient: authClient
         });
     }
