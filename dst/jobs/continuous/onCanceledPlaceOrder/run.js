@@ -20,7 +20,7 @@ let countExecute = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
 const INTERVAL_MILLISECONDS = 200;
 const taskRepo = new cinerino.repository.Task(cinerino.mongoose.connection);
-const transactionRepository = new cinerino.repository.Transaction(cinerino.mongoose.connection);
+const transactionRepo = new cinerino.repository.Transaction(cinerino.mongoose.connection);
 setInterval(() => __awaiter(this, void 0, void 0, function* () {
     if (countExecute > MAX_NUBMER_OF_PARALLEL_TASKS) {
         return;
@@ -30,7 +30,7 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
         debug('exporting tasks...');
         yield cinerino.service.transaction.placeOrder.exportTasks(cinerino.factory.transactionStatusType.Canceled)({
             task: taskRepo,
-            transaction: transactionRepository
+            transaction: transactionRepo
         });
     }
     catch (error) {

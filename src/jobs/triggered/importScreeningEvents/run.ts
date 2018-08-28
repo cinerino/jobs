@@ -22,9 +22,9 @@ async function main() {
     debug('connecting mongodb...');
     await cinerino.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 
-    const eventRepository = new cinerino.repository.Event(cinerino.mongoose.connection);
-    const placeRepository = new cinerino.repository.Place(cinerino.mongoose.connection);
-    const organizationRepository = new cinerino.repository.Organization(cinerino.mongoose.connection);
+    const eventRepo = new cinerino.repository.Event(cinerino.mongoose.connection);
+    const placeRepo = new cinerino.repository.Place(cinerino.mongoose.connection);
+    const organizationRepo = new cinerino.repository.Organization(cinerino.mongoose.connection);
     const chevreAuthClient = new cinerino.chevre.auth.ClientCredentials({
         domain: <string>process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN,
         clientId: <string>process.env.CHEVRE_CLIENT_ID,
@@ -38,19 +38,19 @@ async function main() {
     });
 
     // 全劇場組織を取得
-    const movieTheaters = await organizationRepository.searchMovieTheaters({});
+    const movieTheaters = await organizationRepo.searchMovieTheaters({});
     const importFrom = moment().toDate();
     const importThrough = moment().add(LENGTH_IMPORT_SCREENING_EVENTS_IN_WEEKS, 'weeks').toDate();
     await Promise.all(movieTheaters.map(async (movieTheater) => {
         try {
             debug('importing screening events...');
             await cinerino.service.masterSync.importScreeningEvents({
-                theaterCode: movieTheater.location.branchCode,
+                locationBranchCode: movieTheater.location.branchCode,
                 importFrom: importFrom,
                 importThrough: importThrough
             })({
-                event: eventRepository,
-                place: placeRepository,
+                event: eventRepo,
+                place: placeRepo,
                 eventService: eventService
             });
             debug('screening events imported.');

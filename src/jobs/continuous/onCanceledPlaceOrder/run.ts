@@ -15,7 +15,7 @@ let countExecute = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
 const INTERVAL_MILLISECONDS = 200;
 const taskRepo = new cinerino.repository.Task(cinerino.mongoose.connection);
-const transactionRepository = new cinerino.repository.Transaction(cinerino.mongoose.connection);
+const transactionRepo = new cinerino.repository.Transaction(cinerino.mongoose.connection);
 
 setInterval(
     async () => {
@@ -31,7 +31,7 @@ setInterval(
                 cinerino.factory.transactionStatusType.Canceled
             )({
                 task: taskRepo,
-                transaction: transactionRepository
+                transaction: transactionRepo
             });
         } catch (error) {
             console.error(error);

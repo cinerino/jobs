@@ -19,10 +19,10 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         debug('connecting mongodb...');
         yield cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
-        const placeRepository = new cinerino.repository.Place(cinerino.mongoose.connection);
-        const organizationRepository = new cinerino.repository.Organization(cinerino.mongoose.connection);
+        const placeRepo = new cinerino.repository.Place(cinerino.mongoose.connection);
+        const organizationRepo = new cinerino.repository.Organization(cinerino.mongoose.connection);
         // 全劇場組織を取得
-        const movieTheaters = yield organizationRepository.searchMovieTheaters({});
+        const movieTheaters = yield organizationRepo.searchMovieTheaters({});
         const chevreAuthClient = new cinerino.chevre.auth.ClientCredentials({
             domain: process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN,
             clientId: process.env.CHEVRE_CLIENT_ID,
@@ -38,7 +38,7 @@ function main() {
             try {
                 debug('importing movieTheater...');
                 yield cinerino.service.masterSync.importMovieTheater({ branchCode: movieTheater.location.branchCode })({
-                    place: placeRepository,
+                    place: placeRepo,
                     placeService: placeService
                 });
                 debug('movieTheater imported');

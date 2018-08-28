@@ -19,7 +19,7 @@ cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.
 let countRetry = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
 const INTERVAL_MILLISECONDS = 500;
-const transactionRepository = new cinerino.repository.Transaction(cinerino.mongoose.connection);
+const transactionRepo = new cinerino.repository.Transaction(cinerino.mongoose.connection);
 const RETRY_INTERVAL_MINUTES = 10;
 setInterval(() => __awaiter(this, void 0, void 0, function* () {
     if (countRetry > MAX_NUBMER_OF_PARALLEL_TASKS) {
@@ -28,7 +28,7 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
     countRetry += 1;
     try {
         debug('reexporting tasks...');
-        yield transactionRepository.reexportTasks(RETRY_INTERVAL_MINUTES);
+        yield transactionRepo.reexportTasks(RETRY_INTERVAL_MINUTES);
     }
     catch (error) {
         console.error(error);

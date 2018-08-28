@@ -28,9 +28,9 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         debug('connecting mongodb...');
         yield cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
-        const eventRepository = new cinerino.repository.Event(cinerino.mongoose.connection);
-        const placeRepository = new cinerino.repository.Place(cinerino.mongoose.connection);
-        const organizationRepository = new cinerino.repository.Organization(cinerino.mongoose.connection);
+        const eventRepo = new cinerino.repository.Event(cinerino.mongoose.connection);
+        const placeRepo = new cinerino.repository.Place(cinerino.mongoose.connection);
+        const organizationRepo = new cinerino.repository.Organization(cinerino.mongoose.connection);
         const chevreAuthClient = new cinerino.chevre.auth.ClientCredentials({
             domain: process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN,
             clientId: process.env.CHEVRE_CLIENT_ID,
@@ -43,19 +43,19 @@ function main() {
             auth: chevreAuthClient
         });
         // 全劇場組織を取得
-        const movieTheaters = yield organizationRepository.searchMovieTheaters({});
+        const movieTheaters = yield organizationRepo.searchMovieTheaters({});
         const importFrom = moment().toDate();
         const importThrough = moment().add(LENGTH_IMPORT_SCREENING_EVENTS_IN_WEEKS, 'weeks').toDate();
         yield Promise.all(movieTheaters.map((movieTheater) => __awaiter(this, void 0, void 0, function* () {
             try {
                 debug('importing screening events...');
                 yield cinerino.service.masterSync.importScreeningEvents({
-                    theaterCode: movieTheater.location.branchCode,
+                    locationBranchCode: movieTheater.location.branchCode,
                     importFrom: importFrom,
                     importThrough: importThrough
                 })({
-                    event: eventRepository,
-                    place: placeRepository,
+                    event: eventRepo,
+                    place: placeRepo,
                     eventService: eventService
                 });
                 debug('screening events imported.');
