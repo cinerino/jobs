@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cinerino = require("@cinerino/domain");
 const createDebug = require("debug");
 const mongooseConnectionOptions_1 = require("../../../mongooseConnectionOptions");
-const debug = createDebug('cinerino-jobs:*');
+const debug = createDebug('cinerino-jobs');
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         debug('connecting mongodb...');

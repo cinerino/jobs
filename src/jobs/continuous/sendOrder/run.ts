@@ -6,7 +6,7 @@ import * as createDebug from 'debug';
 
 import mongooseConnectionOptions from '../../../mongooseConnectionOptions';
 
-const debug = createDebug('cinerino-jobs:*');
+const debug = createDebug('cinerino-jobs');
 
 cinerino.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions).then(debug).catch(console.error);
 const redisClient = cinerino.redis.createClient({

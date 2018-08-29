@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cinerino = require("@cinerino/domain");
 const createDebug = require("debug");
 const mongooseConnectionOptions_1 = require("../../../mongooseConnectionOptions");
-const debug = createDebug('cinerino-jobs:*');
+const debug = createDebug('cinerino-jobs');
 cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default).then(debug).catch(console.error);
 let countExecute = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;

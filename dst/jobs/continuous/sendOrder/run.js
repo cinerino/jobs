@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cinerino = require("@cinerino/domain");
 const createDebug = require("debug");
 const mongooseConnectionOptions_1 = require("../../../mongooseConnectionOptions");
-const debug = createDebug('cinerino-jobs:*');
+const debug = createDebug('cinerino-jobs');
 cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default).then(debug).catch(console.error);
 const redisClient = cinerino.redis.createClient({
     host: process.env.REDIS_HOST,

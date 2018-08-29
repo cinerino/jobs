@@ -15,7 +15,7 @@ const cinerino = require("@cinerino/domain");
 const createDebug = require("debug");
 const moment = require("moment");
 const mongooseConnectionOptions_1 = require("../../../mongooseConnectionOptions");
-const debug = createDebug('cinerino-jobs:*');
+const debug = createDebug('cinerino-jobs');
 /**
  * 上映イベントを何週間後までインポートするか
  * @const {number}

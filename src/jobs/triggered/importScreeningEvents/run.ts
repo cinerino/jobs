@@ -7,7 +7,7 @@ import * as moment from 'moment';
 
 import mongooseConnectionOptions from '../../../mongooseConnectionOptions';
 
-const debug = createDebug('cinerino-jobs:*');
+const debug = createDebug('cinerino-jobs');
 
 /**
  * 上映イベントを何週間後までインポートするか

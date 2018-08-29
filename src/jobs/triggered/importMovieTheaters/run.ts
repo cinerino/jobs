@@ -6,7 +6,7 @@ import * as createDebug from 'debug';
 
 import mongooseConnectionOptions from '../../../mongooseConnectionOptions';
 
-const debug = createDebug('cinerino-jobs:*');
+const debug = createDebug('cinerino-jobs');
 
 async function main() {
     debug('connecting mongodb...');
