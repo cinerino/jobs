@@ -23,7 +23,6 @@ async function main() {
     await cinerino.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 
     const eventRepo = new cinerino.repository.Event(cinerino.mongoose.connection);
-    const placeRepo = new cinerino.repository.Place(cinerino.mongoose.connection);
     const organizationRepo = new cinerino.repository.Organization(cinerino.mongoose.connection);
     const chevreAuthClient = new cinerino.chevre.auth.ClientCredentials({
         domain: <string>process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN,
@@ -50,7 +49,6 @@ async function main() {
                 importThrough: importThrough
             })({
                 event: eventRepo,
-                place: placeRepo,
                 eventService: eventService
             });
             debug('screening events imported.');
