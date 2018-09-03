@@ -43,7 +43,7 @@ async function main() {
     await Promise.all(movieTheaters.map(async (movieTheater) => {
         try {
             debug('importing screening events...');
-            await cinerino.service.masterSync.importScreeningEvents({
+            await cinerino.service.stock.importScreeningEvents({
                 locationBranchCode: movieTheater.location.branchCode,
                 importFrom: importFrom,
                 importThrough: importThrough

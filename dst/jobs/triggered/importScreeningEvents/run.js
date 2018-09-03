@@ -48,7 +48,7 @@ function main() {
         yield Promise.all(movieTheaters.map((movieTheater) => __awaiter(this, void 0, void 0, function* () {
             try {
                 debug('importing screening events...');
-                yield cinerino.service.masterSync.importScreeningEvents({
+                yield cinerino.service.stock.importScreeningEvents({
                     locationBranchCode: movieTheater.location.branchCode,
                     importFrom: importFrom,
                     importThrough: importThrough

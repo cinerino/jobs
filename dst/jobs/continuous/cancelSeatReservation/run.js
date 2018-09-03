@@ -1,7 +1,4 @@
 "use strict";
-/**
- * COA仮予約キャンセル
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -11,11 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * 座席仮予約キャンセル
+ */
 const cinerino = require("@cinerino/domain");
 const createDebug = require("debug");
 const mongooseConnectionOptions_1 = require("../../../mongooseConnectionOptions");
 const debug = createDebug('cinerino-jobs');
 cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default).then(debug).catch(console.error);
+const chevreAuthClient = new cinerino.chevre.auth.ClientCredentials({
+    domain: process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN,
+    clientId: process.env.CHEVRE_CLIENT_ID,
+    clientSecret: process.env.CHEVRE_CLIENT_SECRET,
+    scopes: [],
+    state: ''
+});
 let count = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
 const INTERVAL_MILLISECONDS = 500;
@@ -28,7 +35,9 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
     try {
         yield cinerino.service.task.executeByName(cinerino.factory.taskName.CancelSeatReservation)({
             taskRepo: taskRepo,
-            connection: cinerino.mongoose.connection
+            connection: cinerino.mongoose.connection,
+            chevreEndpoint: process.env.CHEVRE_ENDPOINT,
+            chevreAuthClient: chevreAuthClient
         });
     }
     catch (error) {
