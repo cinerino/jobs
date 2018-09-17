@@ -28,7 +28,7 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
     countRetry += 1;
     try {
         debug('reexporting tasks...');
-        yield transactionRepo.reexportTasks(RETRY_INTERVAL_MINUTES);
+        yield transactionRepo.reexportTasks({ intervalInMinutes: RETRY_INTERVAL_MINUTES });
     }
     catch (error) {
         console.error(error);
