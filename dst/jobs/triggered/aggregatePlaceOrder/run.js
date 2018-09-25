@@ -18,8 +18,8 @@ const mongooseConnectionOptions_1 = require("../../../mongooseConnectionOptions"
 const debug = createDebug('cinerino-jobs');
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        const measureFrom = moment(moment().format('YYYY-MM-DDTHH:mm:00Z')).toDate();
-        const measureThrough = moment(measureFrom).add(1, 'minute').toDate();
+        const measureThrough = moment(moment().format('YYYY-MM-DDTHH:mm:00Z')).toDate();
+        const measureFrom = moment(measureThrough).add(-1, 'minute').toDate();
         debug('aggregating...', measureFrom);
         yield cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
         const telemetryRepo = new cinerino.repository.Telemetry(cinerino.mongoose.connection);

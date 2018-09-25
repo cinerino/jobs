@@ -10,8 +10,8 @@ import mongooseConnectionOptions from '../../../mongooseConnectionOptions';
 const debug = createDebug('cinerino-jobs');
 
 async function main() {
-    const measureFrom = moment(moment().format('YYYY-MM-DDTHH:mm:00Z')).toDate();
-    const measureThrough = moment(measureFrom).add(1, 'minute').toDate();
+    const measureThrough = moment(moment().format('YYYY-MM-DDTHH:mm:00Z')).toDate();
+    const measureFrom = moment(measureThrough).add(-1, 'minute').toDate();
     debug('aggregating...', measureFrom);
 
     await cinerino.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
