@@ -16,24 +16,21 @@ const createDebug = require("debug");
 const moment = require("moment");
 const mongooseConnectionOptions_1 = require("../../../mongooseConnectionOptions");
 const debug = createDebug('cinerino-jobs');
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
+cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default).then(debug).catch(console.error);
+const INTERVAL_MILLISECONDS = 60000;
+const telemetryRepo = new cinerino.repository.Telemetry(cinerino.mongoose.connection);
+const transactionRepo = new cinerino.repository.Transaction(cinerino.mongoose.connection);
+setInterval(() => __awaiter(this, void 0, void 0, function* () {
+    try {
         const measureThrough = moment(moment().format('YYYY-MM-DDTHH:mm:00Z')).toDate();
         const measureFrom = moment(measureThrough).add(-1, 'minute').toDate();
         debug('aggregating...', measureFrom);
-        yield cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
-        const telemetryRepo = new cinerino.repository.Telemetry(cinerino.mongoose.connection);
-        const transactionRepo = new cinerino.repository.Transaction(cinerino.mongoose.connection);
         yield cinerino.service.report.telemetry.aggregatePlaceOrder({ measureFrom, measureThrough })({
             telemetry: telemetryRepo,
             transaction: transactionRepo
         });
-        yield cinerino.mongoose.disconnect();
-    });
-}
-main().then(() => {
-    debug('success!');
-}).catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+    }
+    catch (error) {
+        console.error(error);
+    }
+}), INTERVAL_MILLISECONDS);
