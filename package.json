@@ -9,7 +9,7 @@
     }
   ],
   "dependencies": {
-    "@cinerino/domain": "^1.0.0-alpha.36",
+    "@cinerino/domain": "^1.0.0-alpha.42",
     "debug": "^3.2.5",
     "moment": "^2.22.2"
   },
@@ -17,7 +17,7 @@
   "devDependencies": {
     "@types/debug": "0.0.30",
     "@types/mocha": "^5.2.1",
-    "@types/node": "^9.6.31",
+    "@types/node": "^9.6.32",
     "@types/power-assert": "^1.5.0",
     "@types/sinon": "^4.3.3",
     "concurrently": "^3.5.1",
@@ -28,7 +28,7 @@
     "power-assert": "^1.6.1",
     "rimraf": "^2.6.2",
     "sinon": "^5.1.1",
-    "snyk": "^1.96.0",
+    "snyk": "^1.97.1",
     "ts-node": "^6.1.0",
     "tslint": "^5.10.0",
     "tslint-microsoft-contrib": "^5.2.1",
