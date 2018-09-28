@@ -9,28 +9,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * 注文取引集計
+ * 注文取引分析
  */
 const cinerino = require("@cinerino/domain");
 const createDebug = require("debug");
-const moment = require("moment");
 const mongooseConnectionOptions_1 = require("../../../mongooseConnectionOptions");
 const debug = createDebug('cinerino-jobs');
 cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default).then(debug).catch(console.error);
-const INTERVAL_MILLISECONDS = 60000;
-const telemetryRepo = new cinerino.repository.Telemetry(cinerino.mongoose.connection);
-const transactionRepo = new cinerino.repository.Transaction(cinerino.mongoose.connection);
+let count = 0;
+const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
+const INTERVAL_MILLISECONDS = 100;
+const taskRepo = new cinerino.repository.Task(cinerino.mongoose.connection);
 setInterval(() => __awaiter(this, void 0, void 0, function* () {
+    if (count > MAX_NUBMER_OF_PARALLEL_TASKS) {
+        return;
+    }
+    count += 1;
     try {
-        const measureThrough = moment(moment().format('YYYY-MM-DDTHH:mm:00Z')).toDate();
-        const measureFrom = moment(measureThrough).add(-1, 'minute').toDate();
-        debug('aggregating...', measureFrom);
-        yield cinerino.service.report.telemetry.aggregatePlaceOrder({ measureFrom, measureThrough })({
-            telemetry: telemetryRepo,
-            transaction: transactionRepo
+        yield cinerino.service.task.executeByName('analyzePlaceOrder')({
+            taskRepo: taskRepo,
+            connection: cinerino.mongoose.connection
         });
     }
     catch (error) {
         console.error(error);
     }
+    count -= 1;
 }), INTERVAL_MILLISECONDS);
