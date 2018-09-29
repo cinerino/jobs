@@ -26,7 +26,7 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
     }
     count += 1;
     try {
-        yield cinerino.service.task.executeByName('analyzePlaceOrder')({
+        yield cinerino.service.task.executeByName(cinerino.factory.taskName.AnalyzePlaceOrder)({
             taskRepo: taskRepo,
             connection: cinerino.mongoose.connection
         });

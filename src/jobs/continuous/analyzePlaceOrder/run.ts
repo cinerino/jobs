@@ -26,7 +26,7 @@ setInterval(
 
         try {
             await cinerino.service.task.executeByName(
-                <any>'analyzePlaceOrder'
+                cinerino.factory.taskName.AnalyzePlaceOrder
             )({
                 taskRepo: taskRepo,
                 connection: cinerino.mongoose.connection
