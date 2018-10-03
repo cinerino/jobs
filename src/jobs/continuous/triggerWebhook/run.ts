@@ -1,5 +1,5 @@
 /**
- * 注文取引分析
+ * Webhookをたたく
  */
 import * as cinerino from '@cinerino/domain';
 import * as createDebug from 'debug';
@@ -26,7 +26,7 @@ setInterval(
 
         try {
             await cinerino.service.task.executeByName(
-                cinerino.factory.taskName.AnalyzePlaceOrder
+                cinerino.factory.taskName.TriggerWebhook
             )({
                 taskRepo: taskRepo,
                 connection: cinerino.mongoose.connection

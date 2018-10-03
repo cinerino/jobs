@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * 注文取引分析
+ * Webhookをたたく
  */
 const cinerino = require("@cinerino/domain");
 const createDebug = require("debug");
@@ -26,7 +26,7 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
     }
     count += 1;
     try {
-        yield cinerino.service.task.executeByName(cinerino.factory.taskName.AnalyzePlaceOrder)({
+        yield cinerino.service.task.executeByName(cinerino.factory.taskName.TriggerWebhook)({
             taskRepo: taskRepo,
             connection: cinerino.mongoose.connection
         });
