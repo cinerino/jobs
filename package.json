@@ -9,7 +9,7 @@
     }
   ],
   "dependencies": {
-    "@cinerino/domain": "^1.0.0-alpha.63",
+    "@cinerino/domain": "^1.0.0-alpha.64",
     "debug": "^3.2.5",
     "moment": "^2.22.2"
   },
