@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * 上映イベントインポート
+ * 上映イベントインポートタスク作成
  */
 const cinerino = require("@cinerino/domain");
 const createDebug = require("debug");
@@ -28,35 +28,30 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         debug('connecting mongodb...');
         yield cinerino.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
-        const eventRepo = new cinerino.repository.Event(cinerino.mongoose.connection);
+        const taskRepo = new cinerino.repository.Task(cinerino.mongoose.connection);
         const organizationRepo = new cinerino.repository.Organization(cinerino.mongoose.connection);
-        const chevreAuthClient = new cinerino.chevre.auth.ClientCredentials({
-            domain: process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN,
-            clientId: process.env.CHEVRE_CLIENT_ID,
-            clientSecret: process.env.CHEVRE_CLIENT_SECRET,
-            scopes: [],
-            state: ''
-        });
-        const eventService = new cinerino.chevre.service.Event({
-            endpoint: process.env.CHEVRE_ENDPOINT,
-            auth: chevreAuthClient
-        });
         // 全劇場組織を取得
         const movieTheaters = yield organizationRepo.searchMovieTheaters({});
         const importFrom = moment().toDate();
         const importThrough = moment().add(LENGTH_IMPORT_SCREENING_EVENTS_IN_WEEKS, 'weeks').toDate();
+        const runsAt = new Date();
         yield Promise.all(movieTheaters.map((movieTheater) => __awaiter(this, void 0, void 0, function* () {
             try {
-                debug('importing screening events...');
-                yield cinerino.service.stock.importScreeningEvents({
-                    locationBranchCode: movieTheater.location.branchCode,
-                    importFrom: importFrom,
-                    importThrough: importThrough
-                })({
-                    event: eventRepo,
-                    eventService: eventService
-                });
-                debug('screening events imported.');
+                const taskAttributes = {
+                    name: cinerino.factory.taskName.ImportScreeningEvents,
+                    status: cinerino.factory.taskStatus.Ready,
+                    runsAt: runsAt,
+                    remainingNumberOfTries: 1,
+                    lastTriedAt: null,
+                    numberOfTried: 0,
+                    executionResults: [],
+                    data: {
+                        locationBranchCode: movieTheater.location.branchCode,
+                        importFrom: importFrom,
+                        importThrough: importThrough
+                    }
+                };
+                yield taskRepo.save(taskAttributes);
             }
             catch (error) {
                 console.error(error);

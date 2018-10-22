@@ -1,5 +1,5 @@
 /**
- * 上映イベントインポート
+ * 上映イベントインポートタスク作成
  */
 import * as cinerino from '@cinerino/domain';
 import * as createDebug from 'debug';
@@ -22,36 +22,31 @@ async function main() {
     debug('connecting mongodb...');
     await cinerino.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 
-    const eventRepo = new cinerino.repository.Event(cinerino.mongoose.connection);
+    const taskRepo = new cinerino.repository.Task(cinerino.mongoose.connection);
     const organizationRepo = new cinerino.repository.Organization(cinerino.mongoose.connection);
-    const chevreAuthClient = new cinerino.chevre.auth.ClientCredentials({
-        domain: <string>process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN,
-        clientId: <string>process.env.CHEVRE_CLIENT_ID,
-        clientSecret: <string>process.env.CHEVRE_CLIENT_SECRET,
-        scopes: [],
-        state: ''
-    });
-    const eventService = new cinerino.chevre.service.Event({
-        endpoint: <string>process.env.CHEVRE_ENDPOINT,
-        auth: chevreAuthClient
-    });
 
     // 全劇場組織を取得
     const movieTheaters = await organizationRepo.searchMovieTheaters({});
     const importFrom = moment().toDate();
     const importThrough = moment().add(LENGTH_IMPORT_SCREENING_EVENTS_IN_WEEKS, 'weeks').toDate();
+    const runsAt = new Date();
     await Promise.all(movieTheaters.map(async (movieTheater) => {
         try {
-            debug('importing screening events...');
-            await cinerino.service.stock.importScreeningEvents({
-                locationBranchCode: movieTheater.location.branchCode,
-                importFrom: importFrom,
-                importThrough: importThrough
-            })({
-                event: eventRepo,
-                eventService: eventService
-            });
-            debug('screening events imported.');
+            const taskAttributes: cinerino.factory.task.IAttributes<cinerino.factory.taskName.ImportScreeningEvents> = {
+                name: cinerino.factory.taskName.ImportScreeningEvents,
+                status: cinerino.factory.taskStatus.Ready,
+                runsAt: runsAt,
+                remainingNumberOfTries: 1,
+                lastTriedAt: null,
+                numberOfTried: 0,
+                executionResults: [],
+                data: {
+                    locationBranchCode: movieTheater.location.branchCode,
+                    importFrom: importFrom,
+                    importThrough: importThrough
+                }
+            };
+            await taskRepo.save(taskAttributes);
         } catch (error) {
             console.error(error);
         }
